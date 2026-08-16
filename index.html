@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ciclo de Estudos — GCM Sobral | 60 blocos</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--text:#17202a;--muted:#667085;--line:#e5e7eb;--accent:#2563eb;--ok:#16a34a;--warn:#f59e0b}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+header{background:#111827;color:white;padding:28px 18px}.wrap{max-width:1100px;margin:auto}
+h1{margin:0 0 6px;font-size:clamp(24px,4vw,36px)}header p{margin:0;color:#d1d5db}
+.dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+.stat,.day{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 2px 8px #00000008}
+.stat b{display:block;font-size:24px;margin-top:4px}.muted{color:var(--muted);font-size:13px}
+.progress{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-top:10px}.bar{height:100%;background:var(--accent);width:0%;transition:.2s}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.controls button,.controls input{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:white}
+.controls button{cursor:pointer}.controls .primary{background:var(--accent);color:white;border-color:var(--accent)}
+.days{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;padding-bottom:40px}
+.day.current{outline:3px solid #93c5fd}.day.done{border-color:#86efac}
+.day h2{font-size:18px;margin:0}.tag{display:inline-block;font-size:12px;padding:4px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;margin:8px 0}
+.task{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-top:1px solid var(--line)}
+.task input{margin-top:4px;accent-color:var(--accent)}.task.done label{text-decoration:line-through;color:var(--muted)}
+.task label{flex:1}.time{font-size:12px;color:var(--muted);white-space:nowrap}
+.notes{width:100%;margin-top:10px;min-height:54px;border:1px solid var(--line);border-radius:9px;padding:8px;resize:vertical}
+footer{color:var(--muted);font-size:12px;padding:20px 0}
+@media(max-width:700px){.dashboard{grid-template-columns:repeat(2,1fr)}.days{grid-template-columns:1fr}}
+
+.cloud{margin:18px 0;background:white;border:1px solid #dbe3ef;border-radius:14px;padding:16px}
+.cloud h3{margin:0 0 6px}.cloud p{margin:5px 0;color:#667085;font-size:13px}
+.cloudrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.cloud button{padding:10px 12px;border:1px solid #d1d5db;border-radius:10px;background:white;cursor:pointer}
+.cloud .primary{background:#2563eb;color:white;border-color:#2563eb}
+.cloud .danger{background:#fff7ed;border-color:#fed7aa}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600}
+.dot{width:9px;height:9px;border-radius:50%;background:#f59e0b;display:inline-block}.dot.ok{background:#16a34a}.dot.err{background:#dc2626}
+.config{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.config input{width:100%;padding:9px;border:1px solid #d1d5db;border-radius:8px}
+@media(max-width:700px){.config{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>🎯 Ciclo de Estudos — GCM Sobral</h1>
+<p>60 blocos • 3 matérias por bloco • sem dias da semana • progresso salvo automaticamente</p>
+</div></header>
+<main class="wrap">
+
+<section class="cloud">
+  <h3>☁️ Sincronização gratuita com Supabase</h3>
+  <p>O banco já está configurado. Basta criar/entrar com sua conta por e-mail e senha; o progresso será sincronizado entre PC e celular. O cronograma continua funcionando localmente sem internet.</p>
+  <div class="status"><span id="cloudDot" class="dot"></span><span id="cloudStatus">Não configurado</span></div>
+  <div id="configArea">
+    <div class="config">
+      <input id="supabaseUrl" placeholder="Supabase URL">
+      <input id="supabaseAnonKey" placeholder="Supabase anon/public key">
+      <input id="supabaseEmail" type="email" placeholder="E-mail da conta">
+      <input id="supabasePassword" type="password" placeholder="Senha">
+    </div>
+    <div class="cloudrow">
+      <button class="primary" onclick="configureSupabase()">☁️ Conectar / criar conta</button>
+      <button onclick="supabaseLogin()">🔐 Entrar</button>
+      <button onclick="supabaseLogout()">Sair</button>
+      <button onclick="clearCloudConfig()">Limpar configuração deste aparelho</button>
+    </div>
+    <p>Use somente a chave <strong>anon/public</strong> do Supabase. Nunca coloque uma service_role key no HTML.</p>
+  </div>
+  <div class="cloudrow">
+    <button onclick="syncNow()">↕️ Sincronizar agora</button>
+    <button onclick="downloadBackup()">💾 Baixar backup JSON</button>
+    <button onclick="importBackup()">📥 Restaurar backup</button>
+  </div>
+</section>
+
+<section class="dashboard">
+<div class="stat"><span class="muted">Blocos concluídos</span><b id="doneDays">0/60</b></div>
+<div class="stat"><span class="muted">Horas concluídas</span><b id="hours">0h</b></div>
+<div class="stat"><span class="muted">Progresso</span><b id="pct">0%</b><div class="progress"><div id="bar" class="bar"></div></div></div>
+<div class="stat"><span class="muted">Próximo bloco</span><b id="next">Dia 1</b></div>
+</section>
+
+<div class="controls">
+<button class="primary" onclick="goNext()">▶ Ir para o próximo bloco</button>
+<button onclick="markCurrent()">☑ Concluir bloco atual</button>
+<button onclick="resetAll()">↺ Zerar progresso</button>
+<input id="search" placeholder="Filtrar matéria..." oninput="render()">
+</div>
+
+<section id="days" class="days"></section>
+<footer>Regra fixa: Português 2h em todos os blocos; Direito/Legislação 1h; História de Sobral 2h; Matemática/RLM ou Informática 1h. Sincronização opcional via Supabase; o cronograma continua funcionando offline.</footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const strategicLegal = ['Legislação Extravagante', 'Constitucional', 'Legislação Municipal', 'Penal', 'Administrativo', 'Legislação Municipal', 'Processual Penal', 'Legislação Extravagante', 'Constitucional', 'Legislação Municipal', 'Penal', 'Administrativo', 'Legislação Extravagante', 'Processual Penal', 'Legislação Municipal', 'Constitucional', 'Penal', 'Administrativo', 'Legislação Extravagante', 'Processual Penal', 'Legislação Extravagante', 'Constitucional', 'Legislação Municipal', 'Penal', 'Administrativo', 'Legislação Municipal', 'Processual Penal', 'Legislação Extravagante', 'Constitucional', 'Legislação Municipal', 'Penal', 'Administrativo', 'Legislação Extravagante', 'Processual Penal', 'Legislação Municipal', 'Constitucional', 'Penal', 'Administrativo', 'Legislação Extravagante', 'Processual Penal', 'Legislação Extravagante', 'Constitucional', 'Legislação Municipal', 'Penal', 'Administrativo', 'Legislação Municipal', 'Processual Penal', 'Legislação Extravagante', 'Constitucional', 'Legislação Municipal', 'Penal', 'Administrativo', 'Legislação Extravagante', 'Processual Penal', 'Legislação Municipal', 'Constitucional', 'Penal', 'Administrativo', 'Legislação Extravagante', 'Processual Penal'];
+const strategicThird = ['História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM'];
+const blocks=Array.from({length:60},(_,i)=>({
+ name:'Bloco '+(i+1),
+ subjects:[['Português',2],[strategicLegal[i],1],[strategicThird[i],strategicThird[i]==='História de Sobral'?2:1]]
+}));
+
+const key='gcm_sobral_blocos_v2';
+let supabaseClient=null, supabaseUser=null, cloudChannel=null, syncing=false;
+const cfgKey='gcm_supabase_config_v1';
+const DEFAULT_SUPABASE_CONFIG={supabaseUrl:'https://rwmxpcbifwxhvekgeykp.supabase.co',supabaseAnonKey:'sb_publishable_Np-u3C1pBXQgziuCL7VsUQ_UgjqAEni'};
+
+function setCloudStatus(text,type=''){
+  const s=document.getElementById('cloudStatus'), d=document.getElementById('cloudDot');
+  if(s) s.textContent=text;
+  if(d) d.className='dot '+type;
+}
+function readCfg(){try{return JSON.parse(localStorage.getItem(cfgKey)||'null')||DEFAULT_SUPABASE_CONFIG}catch(e){return DEFAULT_SUPABASE_CONFIG}}
+function fillCfg(){
+  const c=readCfg(); if(!c) return;
+  ['supabaseUrl','supabaseAnonKey'].forEach(k=>{
+    const e=document.getElementById(k); if(e)e.value=c[k]||'';
+  });
+}
+async function configureSupabase(){
+  const url=document.getElementById('supabaseUrl').value.trim();
+  const key=document.getElementById('supabaseAnonKey').value.trim();
+  const email=document.getElementById('supabaseEmail').value.trim();
+  const password=document.getElementById('supabasePassword').value;
+  if(!url||!key){alert('Informe a URL e a chave anon/public do Supabase.');return}
+  localStorage.setItem(cfgKey,JSON.stringify({supabaseUrl:url,supabaseAnonKey:key}));
+  try{
+    supabaseClient=window.supabase.createClient(url,key);
+    setCloudStatus('Conectando…');
+    if(email&&password){
+      const {data,error}=await supabaseClient.auth.signUp({email,password});
+      if(error && !/already registered|User already registered/i.test(error.message)) throw error;
+      if(data?.session){
+        supabaseUser=data.user;
+        setCloudStatus('Conta criada e conectada','ok');
+      }else{
+        setCloudStatus('Conta criada — confirme seu e-mail','ok');
+        alert('Conta criada. O Supabase pode exigir confirmação por e-mail. Abra o e-mail de confirmação e depois use o botão “Entrar” com o mesmo e-mail e senha.');
+        return;
+      }
+    }
+    await initSupabase();
+  }catch(e){console.error(e);setCloudStatus('Erro: '+e.message,'err')}
+}
+async function supabaseLogin(){
+  if(!supabaseClient){await initSupabase(true); if(!supabaseClient)return}
+  const email=document.getElementById('supabaseEmail').value.trim();
+  const password=document.getElementById('supabasePassword').value;
+  if(!email||!password){alert('Informe e-mail e senha.');return}
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+  if(error){alert('Não foi possível entrar: '+error.message);return}
+  supabaseUser=data.user; await initSupabase();
+}
+async function initSupabase(){
+  const c=readCfg();
+  if(!c){setCloudStatus('Não configurado');return}
+  if(!window.supabase){setCloudStatus('Biblioteca não carregada','err');return}
+  if(!supabaseClient) supabaseClient=window.supabase.createClient(c.supabaseUrl,c.supabaseAnonKey);
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  supabaseUser=session?.user||supabaseUser;
+  if(!supabaseUser){setCloudStatus('Conectado — faça login');return}
+  setCloudStatus('Conectado','ok');
+  if(cloudChannel) supabaseClient.removeChannel(cloudChannel);
+  cloudChannel=supabaseClient.channel('gcm-study-sync')
+    .on('postgres_changes',{event:'*',schema:'public',table:'study_progress',filter:`user_id=eq.${supabaseUser.id}`},
+      payload=>{if(syncing)return; if(payload.new){data={tasks:payload.new.tasks||{},notes:payload.new.notes||{}};localStorage.setItem(key,JSON.stringify(data));render();setCloudStatus('Sincronizado','ok')}})
+    .subscribe();
+  await syncNow();
+}
+async function syncNow(){
+  if(!supabaseClient||!supabaseUser){setCloudStatus('Faça login para sincronizar');return}
+  try{
+    syncing=true;setCloudStatus('Sincronizando…');
+    const {data:remote,error}=await supabaseClient.from('study_progress').select('tasks,notes').eq('user_id',supabaseUser.id).maybeSingle();
+    if(error)throw error;
+    const localHas=Object.keys(data.tasks||{}).length||Object.keys(data.notes||{}).length;
+    if(remote&&!localHas){
+      data={tasks:remote.tasks||{},notes:remote.notes||{}};
+      localStorage.setItem(key,JSON.stringify(data));
+    }else{
+      const payload={user_id:supabaseUser.id,tasks:data.tasks||{},notes:data.notes||{},updated_at:new Date().toISOString()};
+      const {error:upErr}=await supabaseClient.from('study_progress').upsert(payload,{onConflict:'user_id'});
+      if(upErr)throw upErr;
+    }
+    render();setCloudStatus('Sincronizado','ok');
+  }catch(e){console.error(e);setCloudStatus('Erro na sincronização','err')}
+  finally{syncing=false}
+}
+async function supabaseLogout(){
+  if(supabaseClient) await supabaseClient.auth.signOut();
+  supabaseUser=null;setCloudStatus('Desconectado');
+}
+function clearCloudConfig(){
+  localStorage.removeItem(cfgKey);
+  if(supabaseClient&&cloudChannel)supabaseClient.removeChannel(cloudChannel);
+  supabaseClient=null;supabaseUser=null;
+  ['supabaseUrl','supabaseAnonKey','supabaseEmail','supabasePassword'].forEach(k=>{const e=document.getElementById(k);if(e)e.value=''});
+  setCloudStatus('Não configurado');
+}
+function downloadBackup(){
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-gcm-sobral.json';a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),500);
+}
+function importBackup(){
+  const input=document.createElement('input');input.type='file';input.accept='.json,application/json';
+  input.onchange=async()=>{
+    const file=input.files[0];if(!file)return;
+    try{
+      const obj=JSON.parse(await file.text());
+      if(!obj.tasks||!obj.notes)throw new Error('Formato inválido');
+      data=obj;save();render();if(supabaseClient&&supabaseUser)await syncNow();
+    }catch(e){alert('Não foi possível restaurar este backup.')}
+  };input.click();
+}
+window.addEventListener('load',()=>{localStorage.setItem(cfgKey,JSON.stringify(DEFAULT_SUPABASE_CONFIG));fillCfg();initSupabase()});
+let saveTimer=null;
+function save(){
+  localStorage.setItem(key,JSON.stringify(data));
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{if(supabaseClient&&supabaseUser)syncNow()},700);
+}
+function taskKey(b,i){return b+'-'+i}
+function isChecked(b,i){return !!data.tasks[taskKey(b,i)]}
+function setChecked(b,i,v){data.tasks[taskKey(b,i)]=v;save();render()}
+function blockHours(b){return blocks[b-1].subjects.reduce((s,x)=>s+x[1],0)}
+function blockDone(b){return blocks[b-1].subjects.every((_,i)=>isChecked(b,i))}
+function totalHours(){let h=0;for(let b=1;b<=blocks.length;b++)for(let i=0;i<blocks[b-1].subjects.length;i++)if(isChecked(b,i))h+=blocks[b-1].subjects[i][1];return h}
+function nextBlock(){for(let b=1;b<=blocks.length;b++)if(!blockDone(b))return b;return blocks.length+1}
+function render(){
+ const q=(document.getElementById('search').value||'').toLowerCase();
+ const el=document.getElementById('days');el.innerHTML='';
+ for(let b=1;b<=blocks.length;b++){
+  const block=blocks[b-1];
+  if(q && !block.subjects.some(x=>x[0].toLowerCase().includes(q))) continue;
+  const card=document.createElement('article');
+  card.className='day '+(blockDone(b)?'done ':'')+(b===nextBlock()?'current':'');
+  let html=`<h2>${block.name} ${blockDone(b)?'✅':''}</h2><span class="tag">${blockHours(b)}h de estudo</span>`;
+  block.subjects.forEach((t,i)=>{
+    const checked=isChecked(b,i);
+    html+=`<div class="task ${checked?'done':''}">
+    <input type="checkbox" ${checked?'checked':''} onchange="setChecked(${b},${i},this.checked)">
+    <label><strong>${t[0]}</strong><div class="muted">${i===0?'Bloco principal':'Bloco complementar'}</div></label>
+    <span class="time">${t[1]}h</span></div>`;
+  });
+  html+=`<textarea class="notes" placeholder="Anotações / erros do ${block.name}" onchange="data.notes[${b}]=this.value;save()">${data.notes[b]||''}</textarea>`;
+  card.innerHTML=html;el.appendChild(card);
+ }
+ const done=[...Array(blocks.length)].filter((_,i)=>blockDone(i+1)).length;
+ const p=Math.round(done/blocks.length*100);
+ document.getElementById('doneDays').textContent=`${done}/${blocks.length}`;
+ document.getElementById('hours').textContent=`${totalHours()}h`;
+ document.getElementById('pct').textContent=p+'%';
+ document.getElementById('bar').style.width=p+'%';
+ document.getElementById('next').textContent=nextBlock()<=blocks.length?'Bloco '+nextBlock():'Concluído 🎉';
+}
+function goNext(){
+ const b=nextBlock();
+ if(b<=blocks.length) document.getElementById('days').querySelectorAll('.day')[b-1]?.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function markCurrent(){
+ const b=nextBlock();
+ if(b<=blocks.length){for(let i=0;i<blocks[b-1].subjects.length;i++)data.tasks[taskKey(b,i)]=true;save();render()}
+}
+function resetAll(){if(confirm('Zerar todo o progresso?')){data={tasks:{},notes:{}};save();render()}}
+render();
+</script>
+</body>
+</html>
