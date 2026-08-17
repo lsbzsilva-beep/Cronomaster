@@ -7,260 +7,96 @@
 <style>
 :root{--bg:#f4f6f8;--card:#fff;--text:#17202a;--muted:#667085;--line:#e5e7eb;--accent:#2563eb;--ok:#16a34a;--warn:#f59e0b}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
-header{background:#111827;color:white;padding:28px 18px}.wrap{max-width:1100px;margin:auto}
-h1{margin:0 0 6px;font-size:clamp(24px,4vw,36px)}header p{margin:0;color:#d1d5db}
-.dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
-.stat,.day{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 2px 8px #00000008}
-.stat b{display:block;font-size:24px;margin-top:4px}.muted{color:var(--muted);font-size:13px}
-.progress{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-top:10px}.bar{height:100%;background:var(--accent);width:0%;transition:.2s}
-.controls{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.controls button,.controls input{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:white}
-.controls button{cursor:pointer}.controls .primary{background:var(--accent);color:white;border-color:var(--accent)}
-.days{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;padding-bottom:40px}
-.day.current{outline:3px solid #93c5fd}.day.done{border-color:#86efac}
-.day h2{font-size:18px;margin:0}.tag{display:inline-block;font-size:12px;padding:4px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;margin:8px 0}
-.task{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-top:1px solid var(--line)}
-.task input{margin-top:4px;accent-color:var(--accent)}.task.done label{text-decoration:line-through;color:var(--muted)}
-.task label{flex:1}.time{font-size:12px;color:var(--muted);white-space:nowrap}
-.notes{width:100%;margin-top:10px;min-height:54px;border:1px solid var(--line);border-radius:9px;padding:8px;resize:vertical}
-footer{color:var(--muted);font-size:12px;padding:20px 0}
+header{background:#111827;color:white;padding:28px 18px}.wrap{max-width:1100px;margin:auto}h1{margin:0 0 6px;font-size:clamp(24px,4vw,36px)}header p{margin:0;color:#d1d5db}
+.dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.stat,.day{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 2px 8px #00000008}.stat b{display:block;font-size:24px;margin-top:4px}.muted{color:var(--muted);font-size:13px}
+.progress{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-top:10px}.bar{height:100%;background:var(--accent);width:0%;transition:.2s}.controls{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.controls button,.controls input{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:white}.controls button{cursor:pointer}.controls .primary{background:var(--accent);color:white;border-color:var(--accent)}
+.days{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;padding-bottom:40px}.day.current{outline:3px solid #93c5fd}.day.done{border-color:#86efac}.day h2{font-size:18px;margin:0}.tag{display:inline-block;font-size:12px;padding:4px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;margin:8px 0}.task{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-top:1px solid var(--line)}.task input{margin-top:4px;accent-color:var(--accent)}.task.done label{text-decoration:line-through;color:var(--muted)}.task label{flex:1}.time{font-size:12px;color:var(--muted);white-space:nowrap}.notes{width:100%;margin-top:10px;min-height:54px;border:1px solid var(--line);border-radius:9px;padding:8px;resize:vertical}footer{color:var(--muted);font-size:12px;padding:20px 0}
 @media(max-width:700px){.dashboard{grid-template-columns:repeat(2,1fr)}.days{grid-template-columns:1fr}}
-
-.cloud{margin:18px 0;background:white;border:1px solid #dbe3ef;border-radius:14px;padding:16px}
-.cloud h3{margin:0 0 6px}.cloud p{margin:5px 0;color:#667085;font-size:13px}
-.cloudrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.cloud button{padding:10px 12px;border:1px solid #d1d5db;border-radius:10px;background:white;cursor:pointer}
-.cloud .primary{background:#2563eb;color:white;border-color:#2563eb}
-.cloud .danger{background:#fff7ed;border-color:#fed7aa}
-.status{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600}
-.dot{width:9px;height:9px;border-radius:50%;background:#f59e0b;display:inline-block}.dot.ok{background:#16a34a}.dot.err{background:#dc2626}
-.config{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.config input{width:100%;padding:9px;border:1px solid #d1d5db;border-radius:8px}
-@media(max-width:700px){.config{grid-template-columns:1fr}}
+.cloud{margin:18px 0;background:white;border:1px solid #dbe3ef;border-radius:14px;padding:16px}.cloud h3{margin:0 0 6px}.cloud p{margin:5px 0;color:#667085;font-size:13px}.cloudrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.cloud button{padding:10px 12px;border:1px solid #d1d5db;border-radius:10px;background:white;cursor:pointer}.cloud .primary{background:#2563eb;color:white;border-color:#2563eb}.status{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600}.dot{width:9px;height:9px;border-radius:50%;background:#f59e0b;display:inline-block}.dot.ok{background:#16a34a}.dot.err{background:#dc2626}.config{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.config input{width:100%;padding:9px;border:1px solid #d1d5db;border-radius:8px}@media(max-width:700px){.config{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header><div class="wrap">
-<h1>🎯 Ciclo de Estudos — GCM Sobral</h1>
-<p>60 blocos • 3 matérias por bloco • sem dias da semana • progresso salvo automaticamente</p>
-</div></header>
+<header><div class="wrap"><h1>🎯 Ciclo de Estudos — GCM Sobral</h1><p>60 blocos • 3 matérias por bloco • sem dias da semana • progresso salvo automaticamente</p></div></header>
 <main class="wrap">
-
 <section class="cloud">
-  <h3>☁️ Sincronização gratuita com Supabase</h3>
-  <p>O banco já está configurado. Basta criar/entrar com sua conta por e-mail e senha; o progresso será sincronizado entre PC e celular. O cronograma continua funcionando localmente sem internet.</p>
-  <div class="status"><span id="cloudDot" class="dot"></span><span id="cloudStatus">Não configurado</span></div>
-  <div id="configArea">
-    <div class="config">
-      <input id="supabaseUrl" placeholder="Supabase URL">
-      <input id="supabaseAnonKey" placeholder="Supabase anon/public key">
-      <input id="supabaseEmail" type="email" placeholder="E-mail da conta">
-      <input id="supabasePassword" type="password" placeholder="Senha">
-    </div>
-    <div class="cloudrow">
-      <button class="primary" onclick="configureSupabase()">☁️ Conectar / criar conta</button>
-      <button onclick="supabaseLogin()">🔐 Entrar</button>
-      <button onclick="supabaseLogout()">Sair</button>
-      <button onclick="clearCloudConfig()">Limpar configuração deste aparelho</button>
-    </div>
-    <p>Use somente a chave <strong>anon/public</strong> do Supabase. Nunca coloque uma service_role key no HTML.</p>
-  </div>
-  <div class="cloudrow">
-    <button onclick="syncNow()">↕️ Sincronizar agora</button>
-    <button onclick="downloadBackup()">💾 Baixar backup JSON</button>
-    <button onclick="importBackup()">📥 Restaurar backup</button>
-  </div>
-</section>
-
-<section class="dashboard">
-<div class="stat"><span class="muted">Blocos concluídos</span><b id="doneDays">0/60</b></div>
-<div class="stat"><span class="muted">Horas concluídas</span><b id="hours">0h</b></div>
-<div class="stat"><span class="muted">Progresso</span><b id="pct">0%</b><div class="progress"><div id="bar" class="bar"></div></div></div>
-<div class="stat"><span class="muted">Próximo bloco</span><b id="next">Dia 1</b></div>
-</section>
-
-<div class="controls">
-<button class="primary" onclick="goNext()">▶ Ir para o próximo bloco</button>
-<button onclick="markCurrent()">☑ Concluir bloco atual</button>
-<button onclick="resetAll()">↺ Zerar progresso</button>
-<input id="search" placeholder="Filtrar matéria..." oninput="render()">
+<h3>☁️ Sincronização gratuita com Supabase</h3>
+<p>Crie sua conta ou entre com e-mail e senha. O progresso fica salvo no aparelho e sincronizado entre dispositivos.</p>
+<div class="status"><span id="cloudDot" class="dot"></span><span id="cloudStatus">Inicializando…</span></div>
+<div id="configArea">
+<div class="config"><input id="supabaseUrl" placeholder="Supabase URL"><input id="supabaseAnonKey" placeholder="Supabase anon/public key"><input id="supabaseEmail" type="email" autocomplete="email" placeholder="E-mail da conta"><input id="supabasePassword" type="password" autocomplete="current-password" placeholder="Senha"></div>
+<div class="cloudrow"><button class="primary" onclick="configureSupabase()">☁️ Criar conta</button><button onclick="supabaseLogin()">🔐 Entrar</button><button onclick="resendConfirmation()">✉️ Reenviar confirmação</button><button onclick="supabaseLogout()">Sair</button><button onclick="clearCloudConfig()">Limpar configuração</button></div>
+<p>Use somente a chave <strong>anon/public</strong>. A senha nunca é armazenada pelo Cronomaster.</p>
 </div>
-
+<div class="cloudrow"><button onclick="syncNow()">↕️ Sincronizar agora</button><button onclick="downloadBackup()">💾 Baixar backup JSON</button><button onclick="importBackup()">📥 Restaurar backup</button></div>
+</section>
+<section class="dashboard"><div class="stat"><span class="muted">Blocos concluídos</span><b id="doneDays">0/60</b></div><div class="stat"><span class="muted">Horas concluídas</span><b id="hours">0h</b></div><div class="stat"><span class="muted">Progresso</span><b id="pct">0%</b><div class="progress"><div id="bar" class="bar"></div></div></div><div class="stat"><span class="muted">Próximo bloco</span><b id="next">Bloco 1</b></div></section>
+<div class="controls"><button class="primary" onclick="goNext()">▶ Ir para o próximo bloco</button><button onclick="markCurrent()">☑ Concluir bloco atual</button><button onclick="resetAll()">↺ Zerar progresso</button><input id="search" placeholder="Filtrar matéria..." oninput="render()"></div>
 <section id="days" class="days"></section>
-<footer>Regra fixa: Português 2h em todos os blocos; Direito/Legislação 1h; História de Sobral 2h; Matemática/RLM ou Informática 1h. Sincronização opcional via Supabase; o cronograma continua funcionando offline.</footer>
+<footer>Português 2h em todos os blocos; Direito/Legislação 1h; História de Sobral 2h; Matemática/RLM ou Informática 1h. O cronograma continua funcionando offline.</footer>
 </main>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const strategicLegal = ['Legislação Extravagante', 'Constitucional', 'Legislação Municipal', 'Penal', 'Administrativo', 'Legislação Municipal', 'Processual Penal', 'Legislação Extravagante', 'Constitucional', 'Legislação Municipal', 'Penal', 'Administrativo', 'Legislação Extravagante', 'Processual Penal', 'Legislação Municipal', 'Constitucional', 'Penal', 'Administrativo', 'Legislação Extravagante', 'Processual Penal', 'Legislação Extravagante', 'Constitucional', 'Legislação Municipal', 'Penal', 'Administrativo', 'Legislação Municipal', 'Processual Penal', 'Legislação Extravagante', 'Constitucional', 'Legislação Municipal', 'Penal', 'Administrativo', 'Legislação Extravagante', 'Processual Penal', 'Legislação Municipal', 'Constitucional', 'Penal', 'Administrativo', 'Legislação Extravagante', 'Processual Penal', 'Legislação Extravagante', 'Constitucional', 'Legislação Municipal', 'Penal', 'Administrativo', 'Legislação Municipal', 'Processual Penal', 'Legislação Extravagante', 'Constitucional', 'Legislação Municipal', 'Penal', 'Administrativo', 'Legislação Extravagante', 'Processual Penal', 'Legislação Municipal', 'Constitucional', 'Penal', 'Administrativo', 'Legislação Extravagante', 'Processual Penal'];
-const strategicThird = ['História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM', 'História de Sobral', 'Informática', 'História de Sobral', 'Matemática/RLM'];
-const blocks=Array.from({length:60},(_,i)=>({
- name:'Bloco '+(i+1),
- subjects:[['Português',2],[strategicLegal[i],1],[strategicThird[i],strategicThird[i]==='História de Sobral'?2:1]]
-}));
-
-const key='gcm_sobral_blocos_v2';
-let supabaseClient=null, supabaseUser=null, cloudChannel=null, syncing=false;
-const cfgKey='gcm_supabase_config_v1';
+const strategicLegal=['Legislação Extravagante','Constitucional','Legislação Municipal','Penal','Administrativo','Legislação Municipal','Processual Penal','Legislação Extravagante','Constitucional','Legislação Municipal','Penal','Administrativo','Legislação Extravagante','Processual Penal','Legislação Municipal','Constitucional','Penal','Administrativo','Legislação Extravagante','Processual Penal','Legislação Extravagante','Constitucional','Legislação Municipal','Penal','Administrativo','Legislação Municipal','Processual Penal','Legislação Extravagante','Constitucional','Legislação Municipal','Penal','Administrativo','Legislação Extravagante','Processual Penal','Legislação Municipal','Constitucional','Penal','Administrativo','Legislação Extravagante','Processual Penal','Legislação Extravagante','Constitucional','Legislação Municipal','Penal','Administrativo','Legislação Municipal','Processual Penal','Legislação Extravagante','Constitucional','Legislação Municipal','Penal','Administrativo','Legislação Extravagante','Processual Penal','Legislação Municipal','Constitucional','Penal','Administrativo','Legislação Extravagante','Processual Penal'];
+const strategicThird=['História de Sobral','Matemática/RLM','História de Sobral','Informática','História de Sobral','Matemática/RLM','História de Sobral','Informática','História de Sobral','Matemática/RLM','História de Sobral','Matemática/RLM','História de Sobral','Informática','História de Sobral','Matemática/RLM','História de Sobral','Informática','História de Sobral','Matemática/RLM','História de Sobral','Matemática/RLM','História de Sobral','Informática','História de Sobral','Matemática/RLM','História de Sobral','Informática','História de Sobral','Matemática/RLM','História de Sobral','Matemática/RLM','História de Sobral','Informática','História de Sobral','Matemática/RLM','História de Sobral','Informática','História de Sobral','Matemática/RLM','História de Sobral','Matemática/RLM','História de Sobral','Informática','História de Sobral','Matemática/RLM','História de Sobral','Informática','História de Sobral','Matemática/RLM','História de Sobral','Matemática/RLM','História de Sobral','Informática','História de Sobral','Matemática/RLM','História de Sobral','Informática','História de Sobral','Matemática/RLM'];
+const blocks=Array.from({length:60},(_,i)=>({name:'Bloco '+(i+1),subjects:[['Português',2],[strategicLegal[i],1],[strategicThird[i],strategicThird[i]==='História de Sobral'?2:1]]}));
+const key='gcm_sobral_blocos_v2',cfgKey='gcm_supabase_config_v1';
 const DEFAULT_SUPABASE_CONFIG={supabaseUrl:'https://rwmxpcbifwxhvekgeykp.supabase.co',supabaseAnonKey:'sb_publishable_Np-u3C1pBXQgziuCL7VsUQ_UgjqAEni'};
-
-function setCloudStatus(text,type=''){
-  const s=document.getElementById('cloudStatus'), d=document.getElementById('cloudDot');
-  if(s) s.textContent=text;
-  if(d) d.className='dot '+type;
-}
+let data={tasks:{},notes:{}};try{data=JSON.parse(localStorage.getItem(key)||'null')||data}catch(e){}
+let supabaseClient=null,supabaseUser=null,cloudChannel=null,syncing=false;
+function setCloudStatus(text,type=''){const s=document.getElementById('cloudStatus'),d=document.getElementById('cloudDot');if(s)s.textContent=text;if(d)d.className='dot '+type}
 function readCfg(){try{return JSON.parse(localStorage.getItem(cfgKey)||'null')||DEFAULT_SUPABASE_CONFIG}catch(e){return DEFAULT_SUPABASE_CONFIG}}
-function fillCfg(){
-  const c=readCfg(); if(!c) return;
-  ['supabaseUrl','supabaseAnonKey'].forEach(k=>{
-    const e=document.getElementById(k); if(e)e.value=c[k]||'';
-  });
-}
+function fillCfg(){const c=readCfg();document.getElementById('supabaseUrl').value=c.supabaseUrl||'';document.getElementById('supabaseAnonKey').value=c.supabaseAnonKey||''}
+function getClient(){if(!window.supabase)throw new Error('A biblioteca do Supabase não carregou. Recarregue a página.');const c=readCfg();if(!c.supabaseUrl||!c.supabaseAnonKey)throw new Error('Configuração do Supabase ausente.');if(!supabaseClient)supabaseClient=window.supabase.createClient(c.supabaseUrl,c.supabaseAnonKey);return supabaseClient}
+function friendlyError(e){return e?.message||e?.error_description||e?.error||'Erro desconhecido'}
 async function configureSupabase(){
-  const url=document.getElementById('supabaseUrl').value.trim();
-  const key=document.getElementById('supabaseAnonKey').value.trim();
-  const email=document.getElementById('supabaseEmail').value.trim();
-  const password=document.getElementById('supabasePassword').value;
-  if(!url||!key){alert('Informe a URL e a chave anon/public do Supabase.');return}
-  localStorage.setItem(cfgKey,JSON.stringify({supabaseUrl:url,supabaseAnonKey:key}));
-  try{
-    supabaseClient=window.supabase.createClient(url,key);
-    setCloudStatus('Conectando…');
-    if(email&&password){
-      const {data,error}=await supabaseClient.auth.signUp({email,password});
-      if(error && !/already registered|User already registered/i.test(error.message)) throw error;
-      if(data?.session){
-        supabaseUser=data.user;
-        setCloudStatus('Conta criada e conectada','ok');
-      }else{
-        setCloudStatus('Conta criada — confirme seu e-mail','ok');
-        alert('Conta criada. O Supabase pode exigir confirmação por e-mail. Abra o e-mail de confirmação e depois use o botão “Entrar” com o mesmo e-mail e senha.');
-        return;
-      }
-    }
-    await initSupabase();
-  }catch(e){console.error(e);setCloudStatus('Erro: '+e.message,'err')}
+ const url=document.getElementById('supabaseUrl').value.trim(),anon=document.getElementById('supabaseAnonKey').value.trim(),email=document.getElementById('supabaseEmail').value.trim(),password=document.getElementById('supabasePassword').value;
+ if(!url||!anon){alert('URL e chave anon/public são obrigatórias.');return} if(email&&!password){alert('Informe uma senha.');return} if(password&&password.length<6){alert('A senha precisa ter pelo menos 6 caracteres.');return}
+ localStorage.setItem(cfgKey,JSON.stringify({supabaseUrl:url,supabaseAnonKey:anon}));supabaseClient=null;
+ try{const c=getClient();setCloudStatus('Criando conta…');
+   if(email){const r=await c.auth.signUp({email,password});if(r.error){if(/already registered|already been registered|user already registered/i.test(r.error.message)){alert('Esta conta já existe. Use o botão “Entrar” em vez de criar a conta novamente.');setCloudStatus('Conta já existente');return}throw r.error}
+     if(r.data?.session){supabaseUser=r.data.user;setCloudStatus('Conta criada e conectada','ok');await startAuthenticatedSession()}
+     else{setCloudStatus('Confirmação de e-mail necessária','ok');alert('Conta criada. Verifique também Spam, Lixo eletrônico e Promoções. Depois de confirmar, use “Entrar”. Se o e-mail não chegar, use “Reenviar confirmação”.')}
+   }else{await initSupabase()}
+ }catch(e){console.error(e);setCloudStatus('Erro: '+friendlyError(e),'err');alert('Não foi possível conectar: '+friendlyError(e))}
 }
 async function supabaseLogin(){
-  if(!supabaseClient){await initSupabase(true); if(!supabaseClient)return}
-  const email=document.getElementById('supabaseEmail').value.trim();
-  const password=document.getElementById('supabasePassword').value;
-  if(!email||!password){alert('Informe e-mail e senha.');return}
-  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
-  if(error){alert('Não foi possível entrar: '+error.message);return}
-  supabaseUser=data.user; await initSupabase();
+ const email=document.getElementById('supabaseEmail').value.trim(),password=document.getElementById('supabasePassword').value;if(!email||!password){alert('Informe e-mail e senha.');return}
+ try{const c=getClient();setCloudStatus('Entrando…');const r=await c.auth.signInWithPassword({email,password});if(r.error)throw r.error;supabaseUser=r.data.user;await startAuthenticatedSession();setCloudStatus('Sincronizado','ok')}
+ catch(e){console.error(e);const msg=friendlyError(e);setCloudStatus('Erro: '+msg,'err');alert('Não foi possível entrar: '+msg)}
 }
-async function initSupabase(){
-  const c=readCfg();
-  if(!c){setCloudStatus('Não configurado');return}
-  if(!window.supabase){setCloudStatus('Biblioteca não carregada','err');return}
-  if(!supabaseClient) supabaseClient=window.supabase.createClient(c.supabaseUrl,c.supabaseAnonKey);
-  const {data:{session}}=await supabaseClient.auth.getSession();
-  supabaseUser=session?.user||supabaseUser;
-  if(!supabaseUser){setCloudStatus('Conectado — faça login');return}
-  setCloudStatus('Conectado','ok');
-  if(cloudChannel) supabaseClient.removeChannel(cloudChannel);
-  cloudChannel=supabaseClient.channel('gcm-study-sync')
-    .on('postgres_changes',{event:'*',schema:'public',table:'study_progress',filter:`user_id=eq.${supabaseUser.id}`},
-      payload=>{if(syncing)return; if(payload.new){data={tasks:payload.new.tasks||{},notes:payload.new.notes||{}};localStorage.setItem(key,JSON.stringify(data));render();setCloudStatus('Sincronizado','ok')}})
-    .subscribe();
-  await syncNow();
+async function resendConfirmation(){
+ const email=document.getElementById('supabaseEmail').value.trim();if(!email){alert('Informe o e-mail da conta.');return}
+ try{const c=getClient();const r=await c.auth.resend({type:'signup',email});if(r.error)throw r.error;alert('Solicitação enviada. Verifique a caixa de entrada e o spam. Se a conta já estiver confirmada, você pode simplesmente usar “Entrar”.')}
+ catch(e){alert('Não foi possível reenviar: '+friendlyError(e))}
+}
+async function initSupabase(){try{const c=getClient();const r=await c.auth.getSession();if(r.error)throw r.error;if(r.data.session){supabaseUser=r.data.session.user;await startAuthenticatedSession()}else setCloudStatus('Conectado — faça login')}catch(e){console.error(e);setCloudStatus('Erro: '+friendlyError(e),'err')}}
+async function startAuthenticatedSession(){
+ const c=getClient();if(!supabaseUser){const r=await c.auth.getUser();if(r.data?.user)supabaseUser=r.data.user}if(!supabaseUser){setCloudStatus('Faça login');return}
+ setCloudStatus('Conta autenticada','ok');if(cloudChannel)c.removeChannel(cloudChannel);
+ cloudChannel=c.channel('gcm-study-sync-'+supabaseUser.id).on('postgres_changes',{event:'*',schema:'public',table:'study_progress',filter:'user_id=eq.'+supabaseUser.id},payload=>{if(syncing)return;if(payload.new){data={tasks:payload.new.tasks||{},notes:payload.new.notes||{}};localStorage.setItem(key,JSON.stringify(data));render();setCloudStatus('Sincronizado','ok')}}).subscribe();
+ await syncNow();
 }
 async function syncNow(){
-  if(!supabaseClient||!supabaseUser){setCloudStatus('Faça login para sincronizar');return}
-  try{
-    syncing=true;setCloudStatus('Sincronizando…');
-    const {data:remote,error}=await supabaseClient.from('study_progress').select('tasks,notes').eq('user_id',supabaseUser.id).maybeSingle();
-    if(error)throw error;
-    const localHas=Object.keys(data.tasks||{}).length||Object.keys(data.notes||{}).length;
-    if(remote&&!localHas){
-      data={tasks:remote.tasks||{},notes:remote.notes||{}};
-      localStorage.setItem(key,JSON.stringify(data));
-    }else{
-      const payload={user_id:supabaseUser.id,tasks:data.tasks||{},notes:data.notes||{},updated_at:new Date().toISOString()};
-      const {error:upErr}=await supabaseClient.from('study_progress').upsert(payload,{onConflict:'user_id'});
-      if(upErr)throw upErr;
-    }
-    render();setCloudStatus('Sincronizado','ok');
-  }catch(e){console.error(e);setCloudStatus('Erro na sincronização','err')}
-  finally{syncing=false}
+ if(!supabaseClient||!supabaseUser){setCloudStatus('Faça login para sincronizar');return false}
+ try{syncing=true;setCloudStatus('Sincronizando…');const c=supabaseClient;
+   const r=await c.from('study_progress').select('tasks,notes,updated_at').eq('user_id',supabaseUser.id).maybeSingle();if(r.error)throw r.error;
+   const localTasks=Object.keys(data.tasks||{}).length,localNotes=Object.keys(data.notes||{}).length;
+   if(r.data && !localTasks && !localNotes){data={tasks:r.data.tasks||{},notes:r.data.notes||{}};localStorage.setItem(key,JSON.stringify(data))}
+   else {const u=await c.from('study_progress').upsert({user_id:supabaseUser.id,tasks:data.tasks||{},notes:data.notes||{},updated_at:new Date().toISOString()},{onConflict:'user_id'}).select('user_id').single();if(u.error)throw u.error}
+   render();setCloudStatus('Sincronizado','ok');return true
+ }catch(e){console.error('Cronomaster sync error:',e);const msg=friendlyError(e);setCloudStatus('Erro na sincronização','err');alert('Erro na sincronização com o Supabase:\n\n'+msg+'\n\nSeu progresso local não foi apagado.');return false}finally{syncing=false}
 }
-async function supabaseLogout(){
-  if(supabaseClient) await supabaseClient.auth.signOut();
-  supabaseUser=null;setCloudStatus('Desconectado');
-}
-function clearCloudConfig(){
-  localStorage.removeItem(cfgKey);
-  if(supabaseClient&&cloudChannel)supabaseClient.removeChannel(cloudChannel);
-  supabaseClient=null;supabaseUser=null;
-  ['supabaseUrl','supabaseAnonKey','supabaseEmail','supabasePassword'].forEach(k=>{const e=document.getElementById(k);if(e)e.value=''});
-  setCloudStatus('Não configurado');
-}
-function downloadBackup(){
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-gcm-sobral.json';a.click();
-  setTimeout(()=>URL.revokeObjectURL(a.href),500);
-}
-function importBackup(){
-  const input=document.createElement('input');input.type='file';input.accept='.json,application/json';
-  input.onchange=async()=>{
-    const file=input.files[0];if(!file)return;
-    try{
-      const obj=JSON.parse(await file.text());
-      if(!obj.tasks||!obj.notes)throw new Error('Formato inválido');
-      data=obj;save();render();if(supabaseClient&&supabaseUser)await syncNow();
-    }catch(e){alert('Não foi possível restaurar este backup.')}
-  };input.click();
-}
-window.addEventListener('load',()=>{localStorage.setItem(cfgKey,JSON.stringify(DEFAULT_SUPABASE_CONFIG));fillCfg();initSupabase()});
-let saveTimer=null;
-function save(){
-  localStorage.setItem(key,JSON.stringify(data));
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(()=>{if(supabaseClient&&supabaseUser)syncNow()},700);
-}
-function taskKey(b,i){return b+'-'+i}
-function isChecked(b,i){return !!data.tasks[taskKey(b,i)]}
-function setChecked(b,i,v){data.tasks[taskKey(b,i)]=v;save();render()}
-function blockHours(b){return blocks[b-1].subjects.reduce((s,x)=>s+x[1],0)}
-function blockDone(b){return blocks[b-1].subjects.every((_,i)=>isChecked(b,i))}
-function totalHours(){let h=0;for(let b=1;b<=blocks.length;b++)for(let i=0;i<blocks[b-1].subjects.length;i++)if(isChecked(b,i))h+=blocks[b-1].subjects[i][1];return h}
-function nextBlock(){for(let b=1;b<=blocks.length;b++)if(!blockDone(b))return b;return blocks.length+1}
-function render(){
- const q=(document.getElementById('search').value||'').toLowerCase();
- const el=document.getElementById('days');el.innerHTML='';
- for(let b=1;b<=blocks.length;b++){
-  const block=blocks[b-1];
-  if(q && !block.subjects.some(x=>x[0].toLowerCase().includes(q))) continue;
-  const card=document.createElement('article');
-  card.className='day '+(blockDone(b)?'done ':'')+(b===nextBlock()?'current':'');
-  let html=`<h2>${block.name} ${blockDone(b)?'✅':''}</h2><span class="tag">${blockHours(b)}h de estudo</span>`;
-  block.subjects.forEach((t,i)=>{
-    const checked=isChecked(b,i);
-    html+=`<div class="task ${checked?'done':''}">
-    <input type="checkbox" ${checked?'checked':''} onchange="setChecked(${b},${i},this.checked)">
-    <label><strong>${t[0]}</strong><div class="muted">${i===0?'Bloco principal':'Bloco complementar'}</div></label>
-    <span class="time">${t[1]}h</span></div>`;
-  });
-  html+=`<textarea class="notes" placeholder="Anotações / erros do ${block.name}" onchange="data.notes[${b}]=this.value;save()">${data.notes[b]||''}</textarea>`;
-  card.innerHTML=html;el.appendChild(card);
- }
- const done=[...Array(blocks.length)].filter((_,i)=>blockDone(i+1)).length;
- const p=Math.round(done/blocks.length*100);
- document.getElementById('doneDays').textContent=`${done}/${blocks.length}`;
- document.getElementById('hours').textContent=`${totalHours()}h`;
- document.getElementById('pct').textContent=p+'%';
- document.getElementById('bar').style.width=p+'%';
- document.getElementById('next').textContent=nextBlock()<=blocks.length?'Bloco '+nextBlock():'Concluído 🎉';
-}
-function goNext(){
- const b=nextBlock();
- if(b<=blocks.length) document.getElementById('days').querySelectorAll('.day')[b-1]?.scrollIntoView({behavior:'smooth',block:'center'});
-}
-function markCurrent(){
- const b=nextBlock();
- if(b<=blocks.length){for(let i=0;i<blocks[b-1].subjects.length;i++)data.tasks[taskKey(b,i)]=true;save();render()}
-}
+async function supabaseLogout(){try{if(supabaseClient)await supabaseClient.auth.signOut()}finally{supabaseUser=null;if(cloudChannel){supabaseClient.removeChannel(cloudChannel);cloudChannel=null}setCloudStatus('Desconectado')}}
+function clearCloudConfig(){if(supabaseClient&&cloudChannel)supabaseClient.removeChannel(cloudChannel);supabaseClient=null;supabaseUser=null;localStorage.removeItem(cfgKey);document.getElementById('supabaseUrl').value='';document.getElementById('supabaseAnonKey').value='';setCloudStatus('Não configurado')}
+function downloadBackup(){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-gcm-sobral.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function importBackup(){const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.onchange=async()=>{const file=input.files[0];if(!file)return;try{const obj=JSON.parse(await file.text());if(!obj.tasks||!obj.notes)throw new Error('Formato inválido');data=obj;save();render();if(supabaseUser)await syncNow()}catch(e){alert('Não foi possível restaurar este backup.')}};input.click()}
+function save(){localStorage.setItem(key,JSON.stringify(data));clearTimeout(save.timer);save.timer=setTimeout(()=>{if(supabaseUser)syncNow()},700)}
+function taskKey(b,i){return b+'-'+i}function isChecked(b,i){return !!data.tasks[taskKey(b,i)]}function setChecked(b,i,v){data.tasks[taskKey(b,i)]=v;save();render()}function blockHours(b){return blocks[b-1].subjects.reduce((s,x)=>s+x[1],0)}function blockDone(b){return blocks[b-1].subjects.every((_,i)=>isChecked(b,i))}function totalHours(){let h=0;for(let b=1;b<=blocks.length;b++)for(let i=0;i<blocks[b-1].subjects.length;i++)if(isChecked(b,i))h+=blocks[b-1].subjects[i][1];return h}function nextBlock(){for(let b=1;b<=blocks.length;b++)if(!blockDone(b))return b;return blocks.length+1}
+function render(){const q=(document.getElementById('search')?.value||'').toLowerCase(),el=document.getElementById('days');el.innerHTML='';for(let b=1;b<=blocks.length;b++){const block=blocks[b-1];if(q&&!block.subjects.some(x=>x[0].toLowerCase().includes(q)))continue;const card=document.createElement('article');card.className='day '+(blockDone(b)?'done ':'')+(b===nextBlock()?'current':'');let html='<h2>'+block.name+' '+(blockDone(b)?'✅':'')+'</h2><span class="tag">'+blockHours(b)+'h de estudo</span>';block.subjects.forEach((t,i)=>{const checked=isChecked(b,i);html+='<div class="task '+(checked?'done':'')+'"><input type="checkbox" '+(checked?'checked':'')+' onchange="setChecked('+b+','+i+',this.checked)"><label><strong>'+t[0]+'</strong><div class="muted">'+(i===0?'Bloco principal':'Bloco complementar')+'</div></label><span class="time">'+t[1]+'h</span></div>'});html+='<textarea class="notes" placeholder="Anotações / erros do '+block.name+'" onchange="data.notes['+b+']=this.value;save()">'+(data.notes[b]||'')+'</textarea>';card.innerHTML=html;el.appendChild(card)}const done=[...Array(blocks.length)].filter((_,i)=>blockDone(i+1)).length,p=Math.round(done/blocks.length*100);document.getElementById('doneDays').textContent=done+'/60';document.getElementById('hours').textContent=totalHours()+'h';document.getElementById('pct').textContent=p+'%';document.getElementById('bar').style.width=p+'%';document.getElementById('next').textContent=nextBlock()<=blocks.length?'Bloco '+nextBlock():'Concluído 🎉'}
+function goNext(){const b=nextBlock();if(b<=blocks.length){const cards=[...document.querySelectorAll('.day')];const target=cards.find(c=>c.classList.contains('current'));target?.scrollIntoView({behavior:'smooth',block:'center'})}}
+function markCurrent(){const b=nextBlock();if(b<=blocks.length){for(let i=0;i<blocks[b-1].subjects.length;i++)data.tasks[taskKey(b,i)]=true;save();render()}}
 function resetAll(){if(confirm('Zerar todo o progresso?')){data={tasks:{},notes:{}};save();render()}}
-render();
+window.addEventListener('load',async()=>{fillCfg();render();if(window.supabase){const c=getClient();c.auth.onAuthStateChange(async(event,session)=>{if(event==='SIGNED_IN'&&session){supabaseUser=session.user;setTimeout(()=>startAuthenticatedSession(),0)}if(event==='SIGNED_OUT'){supabaseUser=null;setCloudStatus('Desconectado')}});await initSupabase()}});
 </script>
 </body>
 </html>
